@@ -3,6 +3,10 @@ import random
 class Hammurabi:
     def __init__(self):
         self.rand = random.Random()
+        self.total_starved = 0
+        self.total_death_from_plagues = 0
+        self.total_bushels_eaten_by_rats = 0
+        self.total_immigrants = 0
 
     def main(self):
         self.playGame()
@@ -36,23 +40,28 @@ class Hammurabi:
             grain_to_feed = self.ask_how_much_grain_to_feed_people()
             acres_planted = self.ask_how_many_acres_to_plant()
 
+            initial_population = self.population #uprising wasnt working. needed a variable to store the initial pop
+
             # plague deaths
             self.deaths_from_plagues = self.plague_deaths(self.population)
             if self.deaths_from_plagues > 0:
                 print("\n********************************************************************")
                 print(f"A HORRIBLE PLAGUE HAS STRUCK YOUR KINGDOM! {self.deaths_from_plagues} PEOPLE HAVE PERISHED.")
                 print("********************************************************************")
+                self.total_death_from_plagues += 1
             self.population -= self.deaths_from_plagues
 
             #Starved people
             self.people_starved = self.starvation_deaths(self.population, grain_to_feed)
+            self.total_starved =+ self.people_starved
         
             #uprising
-            if self.uprising(self.population + self.people_starved, self.people_starved):
+            if self.uprising(initial_population + self.people_starved, self.people_starved):
                 print("\nO Fallen Hammurabi, the great famine has ravaged our land and your reign is no more. The people have risen in despair.")
                 print("*********")
                 print("GAME OVER")
                 print("*********")
+                self.final_summary()
                 return
             
             self.population -= self.people_starved
@@ -61,6 +70,7 @@ class Hammurabi:
             if self.people_starved == 0:
                 self.people_entering = self.immigrants(self.population, self.acres_of_land, self.bushels_of_grain)
                 self.population += self.people_entering
+                self.total_immigrants += self.people_entering
             else:
                 self.people_entering = 0
 
@@ -72,7 +82,9 @@ class Hammurabi:
 
             #Rats
             self.bushels_ate_by_rats = self.grain_eaten_by_rats(self.bushels_of_grain)
+            self.total_bushels_eaten_by_rats =+ self.bushels_ate_by_rats
             self.bushels_of_grain -= self.bushels_ate_by_rats
+            
 
             self.land_value = self.new_cost_of_land()
         
@@ -99,7 +111,7 @@ class Hammurabi:
         print(f"Population: {self.population}")
         print(f"Bushels of Grain: {self.bushels_of_grain}")
         print(f"Acres of Land: {self.acres_of_land}")
-        print(f"Plagues: {self.deaths_from_plagues}")
+        print(f"Deaths from plagues: {self.deaths_from_plagues}")
         print(f'Bushels eaten by rats: {self.bushels_ate_by_rats}')
         print(f"Total starved to death: {self.people_starved}")
         print(f"Total Immigrants: {self.people_entering}")
@@ -149,7 +161,7 @@ class Hammurabi:
     def ask_how_much_grain_to_feed_people(self):
         while True:    
             bushels = int(input("How much grain would you like to feed the great people of Sumer?\n"))
-            if bushels > 0 and bushels <= self.bushels_of_grain: #user enters positive # and user has enough grain to feed
+            if bushels >= 0 and bushels <= self.bushels_of_grain: #user enters positive # and user has enough grain to feed
                 self.bushels_of_grain -= bushels  #decrease bushels from total bushels
                 return bushels
             elif bushels > 0:  # user enters a positive # number but does not have enough grain
@@ -189,8 +201,8 @@ class Hammurabi:
         people_fed = bushels_to_feed // 20
         return max(0, population - people_fed)
     
-    def uprising(self, population, people_starved) -> bool:
-        return people_starved > round(population * .45)
+    def uprising(self, initial_population, people_starved) -> bool:
+        return people_starved > round(initial_population * .45)
     
     def immigrants(self, population, acres_owned, grain_in_stroage):
         if self.people_starved == 0:
