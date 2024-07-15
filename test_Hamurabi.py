@@ -15,7 +15,7 @@ class HammurabiTest(unittest.TestCase):
     def testPlagueDeaths1(self):
         number_of_plagues = 0
         for i in range(10000):
-            deaths = self.ham.plagueDeaths(100)
+            deaths = self.ham.plague_deaths(100)
             if deaths > 0:
                 number_of_plagues += 1
         percentPlagues = number_of_plagues / 100
@@ -24,15 +24,15 @@ class HammurabiTest(unittest.TestCase):
     def testPlagueDeaths2(self):
         deaths = 0
         for i in range(10000):
-            deaths = self.ham.plagueDeaths(100)
+            deaths = self.ham.plague_deaths(100)
             if deaths > 0:
                 break
         assert deaths == 50, f"In a plague, {deaths}% of your people die, not 50%."
 
     def testStarvationDeaths(self):
-        deaths = self.ham.starvationDeaths(100, 1639)
+        deaths = self.ham.starvation_deaths(100, 1639)
         assert deaths == 19, "Wrong number of starvation deaths."
-        deaths = self.ham.starvationDeaths(100, 2500)
+        deaths = self.ham.starvation_deaths(100, 2500)
         assert deaths >= 0, "You starved a negative number of people!"
 
     def testUprising(self):
@@ -40,7 +40,7 @@ class HammurabiTest(unittest.TestCase):
         assert not self.ham.uprising(1000, 449), "Should not have had an uprising!"
 
     def testImmigrants(self):
-        imm = self.ham.immigrants(10, 1200, 500)
+        imm = self.ham.immigrants_entered(10, 1200, 500)
         assert imm == 25, "Wrong number of immigrants."
 
     def testHarvest(self):
@@ -55,7 +55,7 @@ class HammurabiTest(unittest.TestCase):
     def testGrainEatenByRats1(self):
         infestations = 0
         for i in range(1000):
-            eaten = self.ham.grainEatenByRats(100)
+            eaten = self.ham.grain_eaten_by_rats(100)
             if eaten > 0:
                 infestations += 1
         percentInfestations = infestations / 100
@@ -65,7 +65,7 @@ class HammurabiTest(unittest.TestCase):
         percent = 0
         counts = [0] * 31
         for i in range(10000):
-            percent = self.ham.grainEatenByRats(100)
+            percent = self.ham.grain_eaten_by_rats(100)
             if percent == 0:
                 continue
             counts[percent] += 1
@@ -76,7 +76,7 @@ class HammurabiTest(unittest.TestCase):
     def testNewCostOfLand(self):
         cost = [0] * 24
         for i in range(1000):
-            price = self.ham.newCostOfLand()
+            price = self.ham.new_cost_of_land()
             assert 17 <= price <= 23, f"Illegal cost of land: {price}"
             cost[price] += 1
         for j in range(17, 24):
