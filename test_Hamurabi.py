@@ -1,6 +1,12 @@
+import unittest
+import sys
+import os
+sys.path.insert(0, '/Users/timl/PythonWork/Hammurabi-py/Hammurabi.py')
+from Hammurabi import Hammurabi
 
-class HammurabiTest:
-    def __init__(self):
+class HammurabiTest(unittest.TestCase):
+    #def __init__(self):
+    def setUp(self):
         self.ham = Hammurabi()
 
     def about(self, expected, actual):
@@ -75,3 +81,7 @@ class HammurabiTest:
             cost[price] += 1
         for j in range(17, 24):
             assert cost[j] > 0, f"You never have a land cost of {j} bushels per acre."
+
+    if __name__ == '__main__':
+        unittest.main()
+

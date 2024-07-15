@@ -57,7 +57,7 @@ class Hammurabi:
         
             #uprising
             if self.uprising(initial_population + self.people_starved, self.people_starved):
-                print("\nO Fallen Hammurabi, the great famine has ravaged our land and your reign is no more. The people have risen in despair.")
+                print("\nO Fallen Hammurabi, thou hast failed to feed his people! The great famine has ravaged our land and your reign is no more. The people h500ave risen in despair.")
                 print("*********")
                 print("GAME OVER")
                 print("*********")
@@ -70,9 +70,9 @@ class Hammurabi:
             if self.people_starved == 0:
                 self.people_entering = self.immigrants(self.population, self.acres_of_land, self.bushels_of_grain)
                 self.population += self.people_entering
-                self.total_immigrants += self.people_entering
+                self.total_immigrants += self.people_entering #getting total immigrants for final summary
             else:
-                self.people_entering = 0
+                self.people_entering = 0 # no immigrants if there was starvation
 
             #Harvest
             total_harvest = self.harvest(acres_planted)
@@ -82,7 +82,7 @@ class Hammurabi:
 
             #Rats
             self.bushels_ate_by_rats = self.grain_eaten_by_rats(self.bushels_of_grain)
-            self.total_bushels_eaten_by_rats =+ self.bushels_ate_by_rats
+            self.total_bushels_eaten_by_rats =+ self.bushels_ate_by_rats #getting total eaten by rats for final summary
             self.bushels_of_grain -= self.bushels_ate_by_rats
             
 
@@ -120,7 +120,7 @@ class Hammurabi:
             print("O most benevolent King Hammurabi, thy unmatched wisdom and care have ensured that none in thy kingdom went hungry. Thy reign was masterful")
         elif self.people_starved > 0 and self.people_starved <= 10:
             print("O revered King Hammurabi, though thy leadership is commendable, a few of thy subjects have felt the pangs of hunger; let us strive for greater bounty.")
-        elif self.people_starved > 5 and self.people_starved <= 25:
+        elif self.people_starved > 10 and self.people_starved <= 25:
             print("O King Hammurabi, while thy reign is just, the hunger of some in thy kingdom reflects a need for better provision.")
         else:
             print("O King Hammurabi, thy people suffered greatly from hunger; such a plight calls for urgent and improved stewardship.")
@@ -202,11 +202,13 @@ class Hammurabi:
         return max(0, population - people_fed)
     
     def uprising(self, initial_population, people_starved) -> bool:
-        return people_starved > round(initial_population * .45)
+        if people_starved > round(initial_population * .45):
+            return True
+        return False
     
-    def immigrants(self, population, acres_owned, grain_in_stroage):
+    def immigrants(self, population, acres_owned, grain_in_storage):
         if self.people_starved == 0:
-            return ((20 * acres_owned + grain_in_stroage) // (100 * population)) + 1
+            return ((20 * acres_owned + grain_in_storage) // (100 * population)) + 1
     
     def harvest(self, acres):
          return acres * self.rand.randint(1,6)
